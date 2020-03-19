@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Google.Authenticator.WebSample
 {
@@ -16,32 +11,32 @@ namespace Google.Authenticator.WebSample
                 Response.Redirect("~/default.aspx?key=" + Guid.NewGuid().ToString().Replace("-", "").Substring(0, 10));
             }
 
-            this.lblSecretKey.Text = Request.QueryString["key"];
+            lblSecretKey.Text = Request.QueryString["key"];
 
-            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
+            var tfa = new TwoFactorAuthenticator();
             var setupInfo = tfa.GenerateSetupCode("Test Two Factor", "user@example.com", Request.QueryString["key"], false, 300);
 
-            string qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
-            string manualEntrySetupCode = setupInfo.ManualEntryKey;
+            var qrCodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+            var manualEntrySetupCode = setupInfo.ManualEntryKey;
 
-            this.imgQrCode.ImageUrl = "data:image/png;base64," + qrCodeImageUrl;
-            this.lblManualSetupCode.Text = manualEntrySetupCode;
+            imgQrCode.ImageUrl = "data:image/png;base64," + qrCodeImageUrl;
+            lblManualSetupCode.Text = manualEntrySetupCode;
         }
 
         protected void btnValidate_Click(object sender, EventArgs e)
         {
-            TwoFactorAuthenticator tfa = new TwoFactorAuthenticator();
-            var result = tfa.ValidateTwoFactorPIN(Request.QueryString["key"], this.txtCode.Text);
+            var tfa = new TwoFactorAuthenticator();
+            var result = tfa.ValidateTwoFactorPin(Request.QueryString["key"], txtCode.Text);
 
             if (result)
             {
-                this.lblValidationResult.Text = this.txtCode.Text + " is a valid PIN at UTC time " + DateTime.UtcNow.ToString();
-                this.lblValidationResult.ForeColor = System.Drawing.Color.Green;
+                lblValidationResult.Text = txtCode.Text + " is a valid PIN at UTC time " + DateTime.UtcNow.ToString();
+                lblValidationResult.ForeColor = System.Drawing.Color.Green;
             }
             else
             {
-                this.lblValidationResult.Text = this.txtCode.Text + " is not a valid PIN at UTC time " + DateTime.UtcNow.ToString();
-                this.lblValidationResult.ForeColor = System.Drawing.Color.Red;
+                lblValidationResult.Text = txtCode.Text + " is not a valid PIN at UTC time " + DateTime.UtcNow.ToString();
+                lblValidationResult.ForeColor = System.Drawing.Color.Red;
             }
         }
     }
